@@ -11,12 +11,22 @@ You have been provided a Postman collection Download Postman collection. This co
     pipenv install && pipenv shell
     ```
     to install all dependencies and get into the virtual environment. Then cd ino server directory
-2. The migrations were already done using:
+2. Configure the FLASK_APP and FLASK_RUN_PORT environment variables:
+    ``` bash
+    export FLASK_APP=app.py
+    export FLASK_RUN_PORT=5555
+    ```
+3. The migrations were already done using:
     ``` bash
     flask db init
     flask db migrate -m "initial migration"
     flask db upgrade head
     ```
+4. Populate the database by running:
+    ``` bash
+    python seed.py
+    ```
+
 
 ## Deliverables
 Your job is to build out the Flask API to add the functionality described in the deliverables below.
