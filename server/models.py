@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.orm import validates
 
 metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
@@ -23,6 +24,8 @@ class Hero(db.Model, SerializerMixin):
     # Association proxy to get projects for this employee through assignments
     powers = association_proxy('hero_powers', 'power',
                                  creator=lambda power_obj: Assignment(power=power_obj))
+    
+    serialize_rules = ('-hero_powers.hero',)
 
     def __repr__(self):
         return f'<Hero id: {self.id}, name: {self.name}, super_name: {self.super_name}>'
@@ -42,6 +45,14 @@ class Power(db.Model, SerializerMixin):
     heroes = association_proxy('hero_powers', 'hero',
                                   creator=lambda hero_obj: Assignment(hero=hero_obj))
 
+    serialize_rules = ('-hero_powers.power',)
+
+    @validates('description')
+    def validate_description(self, key, description):
+        if not description or len(description) < 20:
+            raise ValueError("Description must be present and should be at least 20 characters long")
+        return description
+
     def __repr__(self):
         return f'<Power id: {self.id}, name: {self.name}, description: {self.description}>'
 
@@ -60,6 +71,15 @@ class HeroPower(db.Model, SerializerMixin):
     hero = db.relationship('Hero', back_populates='hero_powers')
     # Relationship mapping the heropower to related power
     power = db.relationship('Power', back_populates='hero_powers')
+    
+    serialize_rules = ('-hero.hero_powers', '-power.hero_powers',)
+
+    @validates('strength')
+    def validate_strength(self, key, strength):
+        valid_strengths = ['Strong', 'Weak', 'Average']
+        if strength.title() not in valid_strengths:
+            raise ValueError(f"Strength must be one of the following values: {', '.join(valid_strengths)}")
+        return strength
 
     def __repr__(self):
         return f'<HeroPower id: {self.id}, strength: {self.strength}, hero_id: {self.hero_id}, power_id: {self.power_id}>'
