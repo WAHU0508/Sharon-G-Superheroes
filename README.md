@@ -5,28 +5,6 @@ Setup
 Create a new PRIVATE repository, and add your TM as a collaborator. Push your solution to this repository and submit for grading.
 You have been provided a Postman collection Download Postman collection. This collection contains all the endpoints that you are required to create with this API. You can download and import it into your Postman application to test that your app works correctly. 
 
-## Setup
-1. Run:
-    ``` bash
-    pipenv install && pipenv shell
-    ```
-    to install all dependencies and get into the virtual environment. Then cd ino server directory
-2. Configure the FLASK_APP and FLASK_RUN_PORT environment variables:
-    ``` bash
-    export FLASK_APP=app.py
-    export FLASK_RUN_PORT=5555
-    ```
-3. The migrations were already done using:
-    ``` bash
-    flask db init
-    flask db migrate -m "initial migration"
-    flask db upgrade head
-    ```
-4. Populate the database by running:
-    ``` bash
-    python seed.py
-    ```
-
 
 ## Deliverables
 Your job is to build out the Flask API to add the functionality described in the deliverables below.
@@ -253,3 +231,36 @@ If the `HeroPower` is **not** created successfully, return the following JSON da
  "errors": ["validation errors"]
 }
 ```
+
+## Setup
+1. Run:
+    ``` bash
+    pipenv install && pipenv shell
+    ```
+    to install all dependencies and get into the virtual environment. Then cd ino server directory
+2. Configure the FLASK_APP and FLASK_RUN_PORT environment variables:
+    ``` bash
+    export FLASK_APP=app.py
+    export FLASK_RUN_PORT=5555
+    ```
+3. The migrations were already done using:
+    ``` bash
+    flask db init
+    flask db migrate -m "initial migration"
+    flask db upgrade head
+    ```
+4. Populate the database by running:
+    ``` bash
+    python seed.py
+    ```
+5. Run:
+   ``` bash
+   flask run or python app.py
+   ```
+6. Open your postman to test the endpoints.
+> http://127.0.0.1:5000/heroes - GET
+> http://127.0.0.1:5000/heroes/1 - GET
+> http://127.0.0.1:5000/powers - GET
+> http://127.0.0.1:5000/powers/1 - GET
+> http://127.0.0.1:5000/powers/1 - PATCH
+> http://127.0.0.1:5000/hero_powers - POST
