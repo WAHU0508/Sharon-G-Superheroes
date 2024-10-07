@@ -17,13 +17,13 @@ class Hero(db.Model, SerializerMixin):
     name = db.Column(db.String)
     super_name = db.Column(db.String)
 
-    # Relationship mapping the employee to related assignments
+    # Relationship mapping the hero to related hero_powers
     hero_powers = db.relationship(
         'HeroPower', back_populates='hero', cascade='all, delete-orphan')
     
-    # Association proxy to get projects for this employee through assignments
+    # Association proxy to get powers for this hero through hero_powers
     powers = association_proxy('hero_powers', 'power',
-                                 creator=lambda power_obj: Assignment(power=power_obj))
+                                 creator=lambda power_obj: HeroPower(power=power_obj))
     
     serialize_rules = ('-hero_powers.hero',)
 
@@ -37,13 +37,13 @@ class Power(db.Model, SerializerMixin):
     name = db.Column(db.String)
     description = db.Column(db.String)
     
-    # Relationship mapping the project to related assignments
+    # Relationship mapping the power to related hero_powers
     hero_powers = db.relationship(
         'HeroPower', back_populates='power',cascade='all, delete-orphan')
 
-    # Association proxy to get employees for this project through assignments
+    # Association proxy to get hero for this project through hero_powers
     heroes = association_proxy('hero_powers', 'hero',
-                                  creator=lambda hero_obj: Assignment(hero=hero_obj))
+                                  creator=lambda hero_obj: HeroPower(hero=hero_obj))
 
     serialize_rules = ('-hero_powers.power',)
 
